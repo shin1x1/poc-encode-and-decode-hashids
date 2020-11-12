@@ -4,6 +4,12 @@
 * Composer
 * Go
 
+## hashids Libraries
+
+* PHP (https://github.com/vinkla/hashids)
+* Go (https://github.com/speps/go-hashids)
+
+
 ## Usage
 
 ```
