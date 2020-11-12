@@ -14,14 +14,18 @@ import (
 const threshold = 100000
 
 func main() {
-	if len(os.Args[1:]) < 2 {
-		log.Fatalf("Usage: %s SALT ID_LENGTH", os.Args[0])
+	if len(os.Args[1:]) < 3 {
+		log.Fatalf("Usage: %s SALT ID_LENGTH COUNT", os.Args[0])
 	}
 
 	salt := os.Args[1]
 	idLength, err := strconv.Atoi(os.Args[2])
 	if err != nil {
 		log.Fatalf("Invalid length of id:%s", os.Args[2])
+	}
+	expectedCount, err := strconv.Atoi(os.Args[3])
+	if err != nil {
+		log.Fatalf("Invalid count of id:%s", os.Args[3])
 	}
 
 	hd := hashids.NewData()
@@ -33,7 +37,7 @@ func main() {
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
-	var lastError error
+	validCount := 0
 	ids := map[string]int64{}
 
 	for scanner.Scan() {
@@ -48,37 +52,40 @@ func main() {
 
 		if err != nil {
 			fmt.Printf("Invalid input number: %s %s\n", splits[0], id)
-			lastError = os.ErrInvalid
 			continue
 		}
 
 		if v, exists := ids[id]; exists {
 			fmt.Printf("Detect collision id: %d %s (prev:%d)\n", number, id, v)
-			lastError = os.ErrInvalid
 			continue
 		}
 		ids[id] = number
 
-		if number%threshold == 0 {
-			fmt.Printf("=== %d:%s\n", number, id)
-		}
-
 		decoded, err := h.DecodeInt64WithError(id)
 		if err != nil {
 			fmt.Printf("Decode Error: %d %s\n", number, id)
-			lastError = os.ErrInvalid
 			continue
 		}
 
-		if number != decoded[0] {
-			lastError = os.ErrInvalid
-			fmt.Printf("Mismatch decoded number: %d %d(%s)\n", number, decoded[0], id)
+		decodedNumber := decoded[0]
+
+		if number != decodedNumber {
+			fmt.Printf("Mismatch decoded number: %d %d(%s)\n", number, decodedNumber, id)
 		}
+
+		if number%threshold == 0 {
+			fmt.Printf("=== %d:%s -> %d\n", number, id, decodedNumber)
+		}
+
+		validCount++
 	}
 
-	if lastError != nil {
+
+	if validCount != expectedCount {
+		fmt.Printf("\n[Error] expected count:%d valid count: %d\n", expectedCount, validCount)
 		os.Exit(1)
 	} else {
+		fmt.Printf("\n[OK] expected count:%d valid count: %d\n", expectedCount, validCount)
 		os.Exit(0)
 	}
 }
