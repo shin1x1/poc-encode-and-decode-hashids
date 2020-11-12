@@ -6,8 +6,14 @@
 
 ## hashids Libraries
 
+### Encoder
+
 * PHP (https://github.com/vinkla/hashids)
+
+### Decoder
+
 * Go (https://github.com/speps/go-hashids)
+* Node.js (https://github.com/niieani/hashids.js)
 
 
 ## Usage

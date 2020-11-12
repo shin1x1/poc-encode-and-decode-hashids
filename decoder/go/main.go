@@ -71,6 +71,7 @@ func main() {
 
 		if number != decodedNumber {
 			fmt.Printf("Mismatch decoded number: %d %d(%s)\n", number, decodedNumber, id)
+			continue
 		}
 
 		if number%threshold == 0 {
