@@ -6,7 +6,7 @@ run-php-to-go:
 	php ./encoder/encoder.php $(SALT) $(ID_LENGTH) $(COUNT) | ./decoder/go/decoder $(SALT) $(ID_LENGTH) $(COUNT)
 
 run-php-to-node:
-	php ./encoder/encoder.php $(SALT) $(ID_LENGTH) $(COUNT) | node ./decoder/node/decoder.js $(SALT) $(ID_LENGTH) $(COUNT)
+	php ./encoder/encoder.php $(SALT) $(ID_LENGTH) $(COUNT) | node --max-old-space-size=4096 ./decoder/node/decoder.js $(SALT) $(ID_LENGTH) $(COUNT)
 
 build-encoder:
 	@(cd encoder && composer install)

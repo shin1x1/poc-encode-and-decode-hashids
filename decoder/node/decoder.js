@@ -26,17 +26,23 @@ process.stdin.on('data', (chunk) => {
             return
         }
 
-        const index = id.substring(0, 2)
-        if (index in ids) {
-            if (id in ids[index]) {
-                console.log("Detect collision id: %d %s (prev:%d)", number, id, ids[index][id])
-                return
+        const idx1 = id.substring(0, 2)
+        const idx2 = id.substring(2, 4)
+        const idx3 = id.substring(4)
+        if (idx1 in ids) {
+            if (idx2 in ids[idx1]) {
+                if (idx3 in ids[idx1][idx2]) {
+                    console.log("Detect collision id: %d %s (prev:%d)", number, id, ids[idx1][idx2][idx3])
+                    return
+                }
+            } else {
+                ids[idx1][idx2] = []
             }
-
         } else {
-            ids[index] = []
+            ids[idx1] = []
+            ids[idx1][idx2] = []
         }
-        ids[index][id] = number
+        ids[idx1][idx2][idx3] = number
 
         const decoded = hashids.decode(id)[0]
         if (isNaN(decoded)) {
