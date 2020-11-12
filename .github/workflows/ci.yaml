@@ -1,8 +1,8 @@
 name: CI
 on: push
 jobs:
-  docker-base-chase:
-    name: docker-base-chase
+  build:
+    name: Run test
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.x
