@@ -26,4 +26,7 @@ php ./encoder/hashids.php salt 8 100000 | ./decoder/decoder salt 8
 
 $ echo $?
 0
+
+$ make encode SALT=salt ID_LENGTH=8 SRC=100000
+63OqKywk
 ```
